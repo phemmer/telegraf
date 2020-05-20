@@ -416,7 +416,7 @@ func (c *CiscoTelemetryMDT) parseContentField(grouper *metric.SeriesGrouper, fie
 			c.mutex.Unlock()
 		}
 
-		grouper.Add(measurement, tags, timestamp, name, value)
+		grouper.AddField(measurement, tags, timestamp, name, value)
 		return
 	}
 

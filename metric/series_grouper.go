@@ -33,8 +33,8 @@ type SeriesGrouper struct {
 	ordered []telegraf.Metric
 }
 
-// Add adds a field key and value to the series.
-func (g *SeriesGrouper) Add(
+// AddField adds a field key and value to the series.
+func (g *SeriesGrouper) AddField(
 	measurement string,
 	tags map[string]string,
 	tm time.Time,

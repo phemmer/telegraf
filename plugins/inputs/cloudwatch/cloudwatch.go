@@ -542,7 +542,7 @@ func (c *CloudWatch) aggregateMetrics(
 		tags["region"] = c.Region
 
 		for i := range result.Values {
-			grouper.Add(namespace, tags, *result.Timestamps[i], *result.Label, *result.Values[i])
+			grouper.AddField(namespace, tags, *result.Timestamps[i], *result.Label, *result.Values[i])
 		}
 	}
 

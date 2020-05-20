@@ -687,7 +687,7 @@ func (m *Modbus) Gather(acc telegraf.Accumulator) error {
 			}
 
 			// Group the data by series
-			grouper.Add(measurement, tags, timestamp, field.Name, field.value)
+			grouper.AddField(measurement, tags, timestamp, field.Name, field.value)
 		}
 
 		// Add the metrics grouped by series to the accumulator

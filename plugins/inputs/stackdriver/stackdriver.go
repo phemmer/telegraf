@@ -197,7 +197,7 @@ func (g *lockedSeriesGrouper) Add(
 ) error {
 	g.Lock()
 	defer g.Unlock()
-	return g.SeriesGrouper.Add(measurement, tags, tm, field, fieldValue)
+	return g.SeriesGrouper.AddField(measurement, tags, tm, field, fieldValue)
 }
 
 // ListMetricDescriptors implements metricClient interface

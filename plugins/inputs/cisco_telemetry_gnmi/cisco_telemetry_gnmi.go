@@ -300,7 +300,7 @@ func (c *CiscoTelemetryGNMI) handleSubscribeResponse(address string, reply *gnmi
 				}
 			}
 
-			grouper.Add(name, tags, timestamp, key, v)
+			grouper.AddField(name, tags, timestamp, key, v)
 		}
 
 		lastAliasPath = aliasPath
