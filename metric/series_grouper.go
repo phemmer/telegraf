@@ -33,6 +33,29 @@ type SeriesGrouper struct {
 	ordered []telegraf.Metric
 }
 
+// AddMetric adds the given metric to the grouper. If another metric with the same name+tags+timestamp exists, this
+// metric will be merged into that one.
+// If the metric is not merged with an existing one, the provided metric will be same instance as returned by Metrics().
+func (g *SeriesGrouper) AddMetric(m telegraf.Metric) {
+	h := fnv.New64a()
+	h.Write([]byte(m.Name() + "\n"))
+	for _, t := range m.TagList() {
+		h.Write([]byte(t.Key + "\n" + t.Value + "\n"))
+	}
+	ts, _ := m.Time().MarshalBinary()
+	h.Write(ts)
+	id := h.Sum64()
+
+	if metric, ok := g.metrics[id]; ok {
+		for _, f := range m.FieldList() {
+			metric.AddField(f.Key, f.Value)
+		}
+	} else {
+		g.metrics[id] = m
+		g.ordered = append(g.ordered, m)
+	}
+}
+
 // AddField adds a field key and value to the series.
 func (g *SeriesGrouper) AddField(
 	measurement string,
