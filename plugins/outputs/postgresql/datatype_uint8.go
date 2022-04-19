@@ -1,7 +1,7 @@
 //nolint
 package postgresql
 
-// Copied from github.com/jackc/pgtype/int8.go and tweaked for uint64
+// Copied from https://github.com/jackc/pgtype/blob/master/int8.go and tweaked for uint64
 /*
 Copyright (c) 2013-2021 Jack Christensen
 

@@ -207,19 +207,21 @@ func TestMain(m *testing.M) {
 		os.Exit(m.Run())
 	}
 
-	// Use the integration server if no other PG addr env vars specified.
-	pguri := "postgresql://localhost:5432"
-	for _, varname := range []string{"PGURI", "PGHOST", "PGHOSTADDR", "PGPORT"} {
+	// Use the integration server if no other PG env vars specified.
+	use_integration := true
+	for _, varname := range []string{"PGHOST", "PGHOSTADDR", "PGPORT", "PGUSER"} {
 		if os.Getenv(varname) != "" {
-			pguri = ""
+			use_integration = false
 			break
 		}
 	}
-	if pguri != "" {
-		_ = os.Setenv("PGURI", pguri)
+	if use_integration {
+		_ = os.Setenv("PGHOST", "localhost")
+		_ = os.Setenv("PGPORT", "5432")
+		_ = os.Setenv("PGUSER", "postgres")
 	}
 
-	if err := prepareDatabase("telegraf"); err != nil {
+	if err := prepareDatabase("telegraf_test"); err != nil {
 		_, _ = fmt.Fprintf(os.Stderr, "Error preparing database: %s\n", err)
 		os.Exit(1)
 	}
@@ -227,7 +229,7 @@ func TestMain(m *testing.M) {
 }
 
 func prepareDatabase(name string) error {
-	db, err := pgx.Connect(ctx, os.Getenv("PGURI"))
+	db, err := pgx.Connect(ctx, "")
 	if err != nil {
 		return err
 	}
@@ -251,7 +253,7 @@ func newPostgresqlTest(tb testing.TB) *PostgresqlTest {
 	}
 
 	p := newPostgresql()
-	p.Connection = "database=telegraf"
+	p.Connection = "database=telegraf_test"
 	logger := NewLogAccumulator(tb)
 	p.Logger = logger
 	p.LogLevel = "debug"
